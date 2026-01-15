@@ -1,0 +1,19 @@
+services:
+  backend:
+    build: ./backend
+    container_name: effective-backend
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  nginx:
+    build: ./nginx
+    container_name: effective-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy 
